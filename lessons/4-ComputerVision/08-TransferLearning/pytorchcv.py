@@ -84,9 +84,11 @@ def train_long(net,train_loader,test_loader,epochs=5,lr=0.01,optimizer=None,loss
             acc+=(predicted==lbls).sum()
             count+=len(labels)
             if i%print_freq==0:
-                print("Epoch {}, minibatch {}: train acc = {}, train loss = {}".format(epoch,i,acc.item()/count,total_loss.item()/count))
+                print(
+                    f"Epoch {epoch}, minibatch {i}: train acc = {acc.item() / count}, train loss = {total_loss.item() / count}"
+                )
         vl,va = validate(net,test_loader,loss_fn)
-        print("Epoch {} done, validation acc = {}, validation loss = {}".format(epoch,va,vl))
+        print(f"Epoch {epoch} done, validation acc = {va}, validation loss = {vl}")
 
 
 def plot_results(hist):
@@ -120,8 +122,8 @@ def plot_convolution(t,title=''):
         
 def display_dataset(dataset, n=10,classes=None):
     fig,ax = plt.subplots(1,n,figsize=(15,3))
-    mn = min([dataset[i][0].min() for i in range(n)])
-    mx = max([dataset[i][0].max() for i in range(n)])
+    mn = min(dataset[i][0].min() for i in range(n))
+    mx = max(dataset[i][0].max() for i in range(n))
     for i in range(n):
         ax[i].imshow(np.transpose((dataset[i][0]-mn)/(mx-mn),(1,2,0)))
         ax[i].axis('off')
@@ -140,19 +142,21 @@ def check_image(fn):
 def check_image_dir(path):
     for fn in glob.glob(path):
         if not check_image(fn):
-            print("Corrupt image: {}".format(fn))
+            print(f"Corrupt image: {fn}")
             os.remove(fn)
 
 
 def common_transform():
     std_normalize = torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
                           std=[0.229, 0.224, 0.225])
-    trans = torchvision.transforms.Compose([
+    return torchvision.transforms.Compose(
+        [
             torchvision.transforms.Resize(256),
             torchvision.transforms.CenterCrop(224),
-            torchvision.transforms.ToTensor(), 
-            std_normalize])
-    return trans
+            torchvision.transforms.ToTensor(),
+            std_normalize,
+        ]
+    )
 
 def load_cats_dogs_dataset():
     if not os.path.exists('data/PetImages'):

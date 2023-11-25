@@ -54,7 +54,7 @@ def check_image(fn):
 def check_image_dir(path):
     for fn in glob.glob(path):
         if not check_image(fn):
-            print("Corrupt image or wrong format: {}".format(fn))
+            print(f"Corrupt image or wrong format: {fn}")
             os.remove(fn)
 
 def load_cats_dogs_dataset(batch_size=64):

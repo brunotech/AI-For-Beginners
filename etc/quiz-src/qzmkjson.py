@@ -51,12 +51,12 @@ for k,v in lessons.items():
     lesson_content[no][0]['quizzes'].append(v)
 
 with open(os.path.join(dst_dir,'index.js'),'w',encoding='utf-8') as f:
-    for i,k in enumerate(lesson_content.keys()):
+    for k in lesson_content:
         f.write(f'import x{k} from "./lesson-{k}.json";\n')
     t = ', '.join([ f"{i} : x{k}[0]" for i,k in enumerate(lesson_content.keys())]);
     f.write(f"const quiz = {{ {t} }}; \n");
     f.write("export default quiz;")
-    
+
 for k,v in lesson_content.items():
     with open(os.path.join(dst_dir,f"lesson-{k}.json"),'w', encoding='utf-8') as f:
         json.dump(v,f,indent=2)
