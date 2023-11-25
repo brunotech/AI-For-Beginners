@@ -90,10 +90,7 @@ def train_epoch_emb(net,dataloader,lr=0.01,optimizer=None,loss_fn = torch.nn.Cro
     for labels,text,off in dataloader:
         optimizer.zero_grad()
         labels,text = labels.to(device), text.to(device)
-        if use_pack_sequence:
-            off = off.to('cpu')
-        else:
-            off = off.to(device)
+        off = off.to('cpu') if use_pack_sequence else off.to(device)
         out = net(text, off)
         loss = loss_fn(out,labels) #cross_entropy(out,labels)
         loss.backward()
